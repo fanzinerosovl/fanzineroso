@@ -1,0 +1,40 @@
+<div class="gallery-container" (click)="closeMenu()">
+  <div *ngFor="let yearGroup of volumenesByYear" class="year-group">
+    <h2 class="year-label">{{ yearGroup.year }}</h2>
+    <div class="image-grid">
+      <div *ngFor="let volume of yearGroup.volumes" class="image-item">
+        <img 
+          [src]="getImagePath(volume.volume)" 
+          [alt]="'Volume ' + volume.volume + ' - ' + volume.months.join(', ')"
+          class="cover-image"
+          (click)="onImageClick($event, volume.volume)"
+        />
+        <div class="image-info">
+          <span class="volume-number">Vol. {{ volume.volume }}</span>
+          <span class="volume-months">{{ volume.months.join(', ') }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div 
+  *ngIf="selectedVolume" 
+  class="context-menu"
+  [style.left.px]="menuPosition.x"
+  [style.top.px]="menuPosition.y"
+  (click)="$event.stopPropagation()"
+>
+  <button class="menu-item" (click)="downloadDigital()">
+    <i class="fa-solid fa-download menu-icon"></i>
+    Descargar Versión Digital
+  </button>
+  <button class="menu-item" (click)="downloadPrint()">
+    <i class="fa-solid fa-print menu-icon"></i>
+    Descargar Versión Impresión
+  </button>
+  <button class="menu-item" (click)="readFanzine()">
+    <i class="fa-solid fa-book-open menu-icon"></i>
+    Leer Fanzine
+  </button>
+</div>

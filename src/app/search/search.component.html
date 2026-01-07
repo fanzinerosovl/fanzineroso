@@ -1,0 +1,101 @@
+<div class="search-container" (click)="closeMenu()">
+  <div class="search-header">
+    <h1 class="search-title">Buscar Fanzines</h1>
+    
+    <div class="search-input-wrapper">
+      <input 
+        type="text" 
+        class="search-input"
+        [(ngModel)]="searchText"
+        (ngModelChange)="onSearchChange()"
+        placeholder="Buscar por palabras clave..."
+      />
+      <button 
+        *ngIf="searchText || selectedTags.size > 0" 
+        class="clear-button"
+        (click)="clearFilters()"
+      >
+        Limpiar filtros
+      </button>
+    </div>
+
+    <div class="selected-tags" *ngIf="selectedTags.size > 0">
+      <span class="selected-label">Filtros activos:</span>
+      <span 
+        *ngFor="let tag of selectedTags" 
+        class="selected-tag"
+        (click)="toggleTag(tag)"
+      >
+        {{ tag }} ×
+      </span>
+    </div>
+  </div>
+
+  <div class="tags-section">
+    <h3 class="tags-title">Todas las palabras clave</h3>
+    <div class="tags-container">
+      <button
+        *ngFor="let keyword of allKeywords"
+        class="tag"
+        [class.active]="isTagSelected(keyword)"
+        (click)="toggleTag(keyword)"
+      >
+        {{ keyword }}
+      </button>
+    </div>
+  </div>
+
+  <div class="results-section">
+    <h3 class="results-title">
+      Resultados ({{ filteredVolumes.length }})
+    </h3>
+    <div class="results-grid" *ngIf="filteredVolumes.length > 0">
+      <div *ngFor="let volume of filteredVolumes" class="volume-card">
+        <img 
+          [src]="getImagePath(volume.volume)" 
+          [alt]="'Volume ' + volume.volume"
+          class="volume-image"
+          (click)="onImageClick($event, volume.volume)"
+        />
+        <div class="volume-info">
+          <span class="volume-number">Vol. {{ volume.volume }}</span>
+          <span class="volume-year">{{ volume.year }}</span>
+          <span class="volume-months">{{ volume.months.join(', ') }}</span>
+          <div class="volume-keywords">
+            <span 
+              *ngFor="let keyword of getMatchingKeywords(volume)" 
+              class="volume-keyword"
+              [class.highlighted]="isTagSelected(keyword.toLowerCase()) || (searchText && keyword.toLowerCase().includes(searchText.toLowerCase()))"
+            >
+              {{ keyword }}
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div *ngIf="filteredVolumes.length === 0" class="no-results">
+      <p>No se encontraron fanzines con los criterios seleccionados.</p>
+    </div>
+  </div>
+</div>
+
+<div 
+  *ngIf="selectedVolume" 
+  class="context-menu"
+  [style.left.px]="menuPosition.x"
+  [style.top.px]="menuPosition.y"
+  (click)="$event.stopPropagation()"
+>
+  <button class="menu-item" (click)="downloadDigital()">
+    <i class="fa-solid fa-download menu-icon"></i>
+    Descargar Versión Digital
+  </button>
+  <button class="menu-item" (click)="downloadPrint()">
+    <i class="fa-solid fa-print menu-icon"></i>
+    Descargar Versión Impresión
+  </button>
+  <button class="menu-item" (click)="readFanzine()">
+    <i class="fa-solid fa-book-open menu-icon"></i>
+    Leer Fanzine
+  </button>
+</div>

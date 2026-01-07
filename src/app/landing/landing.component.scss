@@ -1,0 +1,23 @@
+.landing-container {
+  min-height: 100vh;
+  background: black url('/images/cover.jpeg') no-repeat center center;
+  background-size: cover;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 2rem;
+}
+
+.landing-image {
+  max-width: 90%;
+  max-height: 90vh;
+  width: auto;
+  height: auto;
+  cursor: pointer;
+  transition: transform 0.3s ease, opacity 0.3s ease;
+  
+  &:hover {
+    transform: scale(1.05);
+    opacity: 0.9;
+  }
+}
