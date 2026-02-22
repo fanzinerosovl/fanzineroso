@@ -1,6 +1,8 @@
 .landing-container {
   min-height: 100vh;
-  background: black url('/images/cover.jpeg') no-repeat center center;
+  background-color: black;
+  background-position: center center;
+  background-repeat: no-repeat;
   background-size: cover;
   display: flex;
   justify-content: center;

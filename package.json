@@ -5,6 +5,9 @@
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build",
+    "build:gh-pages": "ng build --base-href /fanzineroso/",
+    "deploy:gh-pages": "ngh --dir dist/fanzineroso/browser",
+    "deploy": "npm run build:gh-pages && npm run deploy:gh-pages",
     "watch": "ng build --watch --configuration development",
     "test": "ng test"
   },

@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import volumenes from '../volumenes.json';
+import { DownloadService } from '../services/download.service';
 
 interface Volume {
   volume: string;
@@ -26,7 +27,10 @@ export class SearchComponent implements OnInit {
   selectedVolume: string | null = null;
   menuPosition = { x: 0, y: 0 };
 
-  constructor(private router: Router) {}
+  constructor(
+    private router: Router,
+    private downloadService: DownloadService
+  ) {}
 
   ngOnInit() {
     this.extractAllKeywords();
@@ -104,20 +108,14 @@ export class SearchComponent implements OnInit {
 
   downloadDigital() {
     if (this.selectedVolume) {
-      const link = document.createElement('a');
-      link.href = `fanzines/${this.selectedVolume}.pdf`;
-      link.download = `fanzine-${this.selectedVolume}-digital.pdf`;
-      link.click();
+      this.downloadService.downloadDigital(this.selectedVolume);
       this.closeMenu();
     }
   }
 
   downloadPrint() {
     if (this.selectedVolume) {
-      const link = document.createElement('a');
-      link.href = `impresion/${this.selectedVolume}.pdf`;
-      link.download = `fanzine-${this.selectedVolume}-impresion.pdf`;
-      link.click();
+      this.downloadService.downloadPrint(this.selectedVolume);
       this.closeMenu();
     }
   }
@@ -125,6 +123,18 @@ export class SearchComponent implements OnInit {
   readFanzine() {
     if (this.selectedVolume) {
       this.router.navigate(['/lector', this.selectedVolume]);
+      this.closeMenu();
+    }
+  }
+
+  copyDownloadUrl() {
+    if (this.selectedVolume) {
+      const url = this.downloadService.getDownloadUrl(this.selectedVolume);
+      navigator.clipboard.writeText(url).then(() => {
+        alert('URL copiada al portapapeles');
+      }).catch(() => {
+        alert('Error al copiar la URL');
+      });
       this.closeMenu();
     }
   }

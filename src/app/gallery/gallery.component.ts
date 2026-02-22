@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Router } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import volumenes from '../volumenes.json';
+import { DownloadService } from '../services/download.service';
 
 interface Volume {
   volume: string;
@@ -18,7 +19,7 @@ interface VolumesByYear {
 @Component({
   selector: 'app-gallery',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, RouterModule],
   templateUrl: './gallery.component.html',
   styleUrls: ['./gallery.component.scss']
 })
@@ -27,7 +28,10 @@ export class GalleryComponent implements OnInit {
   selectedVolume: string | null = null;
   menuPosition = { x: 0, y: 0 };
 
-  constructor(private router: Router) {}
+  constructor(
+    private router: Router,
+    private downloadService: DownloadService
+  ) {}
 
   ngOnInit() {
     this.groupVolumesByYear();
@@ -48,7 +52,7 @@ export class GalleryComponent implements OnInit {
     this.volumenesByYear = Array.from(grouped.entries())
       .map(([year, volumes]) => ({
         year,
-        volumes: volumes.sort((a, b) => parseInt(a.volume) - parseInt(b.volume))
+        volumes: volumes.sort((a, b) => parseInt(b.volume) - parseInt(a.volume))
       }))
       .sort((a, b) => parseInt(b.year) - parseInt(a.year));
   }
@@ -73,20 +77,14 @@ export class GalleryComponent implements OnInit {
 
   downloadDigital() {
     if (this.selectedVolume) {
-      const link = document.createElement('a');
-      link.href = `fanzines/Fanzineroso_${this.selectedVolume}.pdf`;
-      link.download = `Fanzineroso_${this.selectedVolume}-digital.pdf`;
-      link.click();
+      this.downloadService.downloadDigital(this.selectedVolume);
       this.closeMenu();
     }
   }
 
   downloadPrint() {
     if (this.selectedVolume) {
-      const link = document.createElement('a');
-      link.href = `impresion/Fanzineroso_${this.selectedVolume}.pdf`;
-      link.download = `Fanzineroso_${this.selectedVolume}-print.pdf`;
-      link.click();
+      this.downloadService.downloadPrint(this.selectedVolume);
       this.closeMenu();
     }
   }
@@ -94,6 +92,18 @@ export class GalleryComponent implements OnInit {
   readFanzine() {
     if (this.selectedVolume) {
       this.router.navigate(['/lector', this.selectedVolume]);
+      this.closeMenu();
+    }
+  }
+
+  copyDownloadUrl() {
+    if (this.selectedVolume) {
+      const url = this.downloadService.getDownloadUrl(this.selectedVolume);
+      navigator.clipboard.writeText(url).then(() => {
+        alert('URL copiada al portapapeles');
+      }).catch(() => {
+        alert('Error al copiar la URL');
+      });
       this.closeMenu();
     }
   }
