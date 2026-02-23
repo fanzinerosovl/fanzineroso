@@ -10,7 +10,8 @@ export class DownloadService {
    */
   downloadDigital(volume: string): void {
     const link = document.createElement('a');
-    link.href = `fanzines/Fanzineroso_${volume}.pdf`;
+    const pdfUrl = new URL(`fanzines/Fanzineroso_${volume}.pdf`, document.baseURI);
+    link.href = pdfUrl.toString();
     link.download = `Fanzineroso_${volume}-digital.pdf`;
     link.click();
   }
@@ -21,7 +22,8 @@ export class DownloadService {
    */
   downloadPrint(volume: string): void {
     const link = document.createElement('a');
-    link.href = `impresion/Fanzineroso_${volume}.pdf`;
+    const pdfUrl = new URL(`impresion/Fanzineroso_${volume}.pdf`, document.baseURI);
+    link.href = pdfUrl.toString();
     link.download = `Fanzineroso_${volume}-print.pdf`;
     link.click();
   }
@@ -32,8 +34,6 @@ export class DownloadService {
    * @returns The full URL to the digital version of the fanzine
    */
   getDownloadUrl(volume: string): string {
-    const baseUrl = window.location.origin;
-    const basePath = window.location.pathname.replace(/\/[^/]*$/, '');
-    return `${baseUrl}${basePath}/fanzines/Fanzineroso_${volume}.pdf`;
+    return new URL(`fanzines/Fanzineroso_${volume}.pdf`, document.baseURI).toString();
   }
 }

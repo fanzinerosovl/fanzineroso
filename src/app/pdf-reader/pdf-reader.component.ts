@@ -5,7 +5,8 @@ import * as pdfjsLib from 'pdfjs-dist';
 
 // Configure PDF.js worker
 if (typeof window !== 'undefined') {
-  (pdfjsLib as any).GlobalWorkerOptions.workerSrc = '/pdf.worker.min.mjs';
+  const workerUrl = new URL('pdf.worker.min.mjs', document.baseURI);
+  (pdfjsLib as any).GlobalWorkerOptions.workerSrc = workerUrl.toString();
 }
 
 @Component({
@@ -34,8 +35,8 @@ export class PdfReaderComponent implements OnInit {
       const volume = params.get('volume');
       if (volume) {
         this.currentVolume.set(volume);
-        const pdfPath = `/fanzines/Fanzineroso_${volume}.pdf`;
-        this.loadPDF(pdfPath);
+        const pdfUrl = new URL(`fanzines/Fanzineroso_${volume}.pdf`, document.baseURI);
+        this.loadPDF(pdfUrl.toString());
       }
     });
   }
@@ -130,7 +131,8 @@ export class PdfReaderComponent implements OnInit {
   downloadPDF() {
     if (this.currentVolume()) {
       const link = document.createElement('a');
-      link.href = `/fanzines/Fanzineroso_${this.currentVolume()}.pdf`;
+      const pdfUrl = new URL(`fanzines/Fanzineroso_${this.currentVolume()}.pdf`, document.baseURI);
+      link.href = pdfUrl.toString();
       link.download = `Fanzineroso_${this.currentVolume()}.pdf`;
       link.click();
     }
