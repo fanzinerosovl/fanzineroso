@@ -34,7 +34,7 @@ export class PdfReaderComponent implements OnInit {
       const volume = params.get('volume');
       if (volume) {
         this.currentVolume.set(volume);
-        const pdfPath = `/fanzines/Fanzineroso_${volume}.pdf`;
+        const pdfPath = `fanzines/Fanzineroso_${volume}.pdf`;
         this.loadPDF(pdfPath);
       }
     });
