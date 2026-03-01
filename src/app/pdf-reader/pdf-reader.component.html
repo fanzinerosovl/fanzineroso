@@ -1,0 +1,48 @@
+<div class="pdf-reader">
+  <div class="loading" *ngIf="isLoading()">
+    <div class="spinner"></div>
+    <p>Cargando PDF...</p>
+  </div>
+
+  <div class="pdf-viewer" *ngIf="!isLoading()">
+    <div class="rendering-overlay" *ngIf="isRenderingPage()">
+      <div class="spinner"></div>
+    </div>
+    
+    <div class="toolbar">
+      <div class="nav-controls">
+        <button (click)="previousPage()" [disabled]="!canGoPrevious()">
+          ← Anterior
+        </button>
+        <span class="page-info">
+          Página {{ currentPage() }} de {{ totalPages() }}
+        </span>
+        <button (click)="nextPage()" [disabled]="!canGoNext()">
+          Siguiente →
+        </button>
+      </div>
+      
+      <div class="zoom-controls">
+        <button (click)="zoomOut()" title="Disminuir zoom">
+          −
+        </button>
+        <span class="zoom-info" (click)="resetZoom()" title="Haz clic para reiniciar">
+          {{ zoomLevel() }}%
+        </span>
+        <button (click)="zoomIn()" title="Aumentar zoom">
+          +
+        </button>
+      </div>
+      
+      <div class="download-controls">
+        <button (click)="downloadPDF()" class="download-button" title="Descargar PDF">
+          <i class="fa-solid fa-download"></i>
+        </button>
+      </div>
+    </div>
+
+    <div class="page-container">
+      <img [src]="canvasDataUrl()" alt="Página PDF" *ngIf="canvasDataUrl()" />
+    </div>
+  </div>
+</div>

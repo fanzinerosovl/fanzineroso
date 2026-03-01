@@ -1,0 +1,18 @@
+<div class="app-container">
+  <header class="app-header">
+    <div class="logo-container">
+      <img src="images/fanzineroso.jpeg" alt="Fanzineroso" class="logo" (click)="navigateToHome()" />
+    </div>
+    <h1 class="header-title">FANZINEROSO - VOCERX LIBERTARIX</h1>
+    <div class="nav-icons">
+      <i class="fa-solid fa-magnifying-glass search-icon" (click)="navigateToSearch()"></i>
+      <i class="fa-brands fa-instagram instagram-icon" (click)="navigateToInstagram()"></i>
+      <i class="fa-brands fa-blogger blogger-icon" (click)="navigateToBlogger()"></i>
+      <i class="fa-solid fa-envelope email-icon" (click)="sendEmail()"></i>
+    </div>
+  </header>
+  
+  <div class="app-content">
+    <router-outlet />
+  </div>
+</div>
