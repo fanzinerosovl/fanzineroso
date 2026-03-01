@@ -5,7 +5,7 @@ import * as pdfjsLib from 'pdfjs-dist';
 
 // Configure PDF.js worker
 if (typeof window !== 'undefined') {
-  (pdfjsLib as any).GlobalWorkerOptions.workerSrc = '/pdf.worker.min.mjs';
+  (pdfjsLib as any).GlobalWorkerOptions.workerSrc = 'pdf.worker.min.mjs';
 }
 
 @Component({
