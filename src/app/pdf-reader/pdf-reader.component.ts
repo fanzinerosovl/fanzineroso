@@ -5,7 +5,7 @@ import * as pdfjsLib from 'pdfjs-dist';
 
 // Configure PDF.js worker
 if (typeof window !== 'undefined') {
-  (pdfjsLib as any).GlobalWorkerOptions.workerSrc = 'pdf.worker.min.mjs';
+  (pdfjsLib as any).GlobalWorkerOptions.workerSrc = '/pdf.worker.min.mjs';
 }
 
 @Component({
@@ -34,7 +34,7 @@ export class PdfReaderComponent implements OnInit {
       const volume = params.get('volume');
       if (volume) {
         this.currentVolume.set(volume);
-        const pdfPath = `fanzines/Fanzineroso_${volume}.pdf`;
+        const pdfPath = `/fanzines/Fanzineroso_${volume}.pdf`;
         this.loadPDF(pdfPath);
       }
     });
@@ -43,7 +43,10 @@ export class PdfReaderComponent implements OnInit {
   async loadPDF(url: string): Promise<void> {
     try {
       this.isLoading.set(true);
-      const loadingTask = pdfjsLib.getDocument(url);
+      const loadingTask = pdfjsLib.getDocument({
+        url,
+        disableWorker: true
+      } as any);
       this.pdfDocument = await loadingTask.promise;
       this.totalPages.set(this.pdfDocument.numPages);
       

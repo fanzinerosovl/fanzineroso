@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Router, RouterModule } from '@angular/router';
+import { RouterModule } from '@angular/router';
 import volumenes from '../volumenes.json';
 import { DownloadService } from '../services/download.service';
 
@@ -24,12 +24,15 @@ interface VolumesByYear {
   styleUrls: ['./gallery.component.scss']
 })
 export class GalleryComponent implements OnInit {
+  private readonly MENU_WIDTH = 250;
+  private readonly MENU_HEIGHT = 220;
+  private readonly MENU_MARGIN = 12;
+
   volumenesByYear: VolumesByYear[] = [];
   selectedVolume: string | null = null;
   menuPosition = { x: 0, y: 0 };
 
   constructor(
-    private router: Router,
     private downloadService: DownloadService
   ) {}
 
@@ -64,10 +67,14 @@ export class GalleryComponent implements OnInit {
   onImageClick(event: MouseEvent, volume: string) {
     event.preventDefault();
     event.stopPropagation();
+
+    const maxX = window.innerWidth - this.MENU_WIDTH - this.MENU_MARGIN;
+    const maxY = window.innerHeight - this.MENU_HEIGHT - this.MENU_MARGIN;
+
     this.selectedVolume = volume;
     this.menuPosition = {
-      x: event.clientX,
-      y: event.clientY
+      x: Math.max(this.MENU_MARGIN, Math.min(event.clientX, maxX)),
+      y: Math.max(this.MENU_MARGIN, Math.min(event.clientY, maxY))
     };
   }
 
@@ -91,7 +98,7 @@ export class GalleryComponent implements OnInit {
 
   readFanzine() {
     if (this.selectedVolume) {
-      this.router.navigate(['/lector', this.selectedVolume]);
+      window.open(`/fanzines/Fanzineroso_${this.selectedVolume}.pdf`, '_blank');
       this.closeMenu();
     }
   }
