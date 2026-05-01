@@ -98,7 +98,8 @@ export class GalleryComponent implements OnInit {
 
   readFanzine() {
     if (this.selectedVolume) {
-      window.open(`/fanzines/Fanzineroso_${this.selectedVolume}.pdf`, '_blank');
+      const url = this.downloadService.getDownloadUrl(this.selectedVolume);
+      window.open(url, '_blank');
       this.closeMenu();
     }
   }
